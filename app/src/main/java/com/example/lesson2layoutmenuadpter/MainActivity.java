@@ -13,8 +13,12 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.lesson2layoutmenuadpter.addproduct.AddProductFragment;
+import com.example.lesson2layoutmenuadpter.network.ProductEntry;
 import com.example.lesson2layoutmenuadpter.productview.ProductGridFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
 
@@ -38,11 +42,6 @@ public class MainActivity extends BaseActivity {
                         .commit();
             }
         }
-//        new MaterialAlertDialogBuilder(MainActivity.this)
-//                .setTitle("Title")
-//                .setMessage("Message")
-//                .setPositiveButton("Ok", null)
-//                .show();
     }
 
     @Override
@@ -57,6 +56,11 @@ public class MainActivity extends BaseActivity {
         Intent intent;
         switch(item.getItemId())
         {
+//            case R.id.add_product:
+//                AddProductFragment fragment = new AddProductFragment();
+////                fragment.setTargetFragment(ProductGridFragment.this, 120);
+//                ((NavigationHost)this).navigateTo(fragment, true);
+//                return true;
             case R.id.table:
                 this.navigateTo(new ProductGridFragment(), true);
                 //Toast.makeText(this, "Зробити фото", Toast.LENGTH_LONG).show();

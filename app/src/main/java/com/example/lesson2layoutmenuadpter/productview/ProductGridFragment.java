@@ -1,5 +1,7 @@
 package com.example.lesson2layoutmenuadpter.productview;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,9 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.lesson2layoutmenuadpter.NavigationHost;
 import com.example.lesson2layoutmenuadpter.R;
+import com.example.lesson2layoutmenuadpter.addproduct.AddProductFragment;
 import com.example.lesson2layoutmenuadpter.network.ProductEntry;
 import com.example.lesson2layoutmenuadpter.productview.network.ProductDTO;
 import com.example.lesson2layoutmenuadpter.productview.network.ProductDTOService;
@@ -29,8 +35,9 @@ import retrofit2.Response;
 public class ProductGridFragment extends Fragment {
 
     private static final String TAG = ProductGridFragment.class.getSimpleName();
-
+    private Button btnAdd, btnRemove;
     private RecyclerView recyclerView;
+    private ProductEntry nProduct = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,8 @@ public class ProductGridFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product_grid, container, false);
 
+        btnAdd = view.findViewById(R.id.btn_add);
+
         // Set up the RecyclerView
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -52,7 +61,7 @@ public class ProductGridFragment extends Fragment {
 //        ProductCardRecyclerViewAdapter adapter = new ProductCardRecyclerViewAdapter(list);
 //
 //        recyclerView.setAdapter(adapter);
-
+//        Log.d(TAG, "----------!!!!!!!!!!!----------");
         int largePadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing);
         int smallPadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing_small);
         recyclerView.addItemDecoration(new ProductGridItemDecoration(largePadding, smallPadding));
@@ -71,6 +80,9 @@ public class ProductGridFragment extends Fragment {
                                 ProductEntry pe = new ProductEntry(item.getTitle(), item.getUrl(), item.getUrl(), item.getPrice(), "sdfasd");
                                 newlist.add(pe);
                             }
+                            if (nProduct != null){
+                                newlist.add(nProduct);
+                            }
                             ProductCardRecyclerViewAdapter newAdapter = new ProductCardRecyclerViewAdapter(newlist);
                             recyclerView.swapAdapter(newAdapter, false);
                         }
@@ -87,10 +99,30 @@ public class ProductGridFragment extends Fragment {
                     }
                 });
 
-
-
-
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddProductFragment fragment = new AddProductFragment();
+                fragment.setTargetFragment(ProductGridFragment.this, 120);
+                ((NavigationHost)getActivity()).navigateTo(fragment, true);
+            }
+        });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 120){
+            if (resultCode == Activity.RESULT_OK){
+                String nTitle = data.getStringExtra("title");
+                String nPrice = data.getStringExtra("price");
+                String nUrl = data.getStringExtra("url");
+                nProduct = new ProductEntry(nTitle, nUrl, nUrl, nPrice, "Description");
+            }else {
+
+            }
+        }
     }
 }
